@@ -42,7 +42,7 @@
     excludes:
       - restic_{{ restic_version[1:] }}_freebsd_amd64
   register: find_result
-- name: Cleanup
+- name: Cleanup files
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
