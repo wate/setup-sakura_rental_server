@@ -4,7 +4,7 @@
   gather_facts: false
   become: false
   pre_tasks:
-    - name: 環境変数が定義済みかどうかのチェック
+    - name: パスワード用変数が定義済みかどうかのチェック
       ansible.builtin.assert:
         that:
           - sakura_login_password is defined

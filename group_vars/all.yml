@@ -1,3 +1,17 @@
 ---
 sakura_login_password: "{{ lookup('env', 'SAKURA_LOGIN_PASSWORD') }}"
+
+### WP-CLI
 wp_default_locale: ja
+
+### Leantime
+leantime_env:
+  LEAN_DEBUG: 0
+  LEAN_DB_HOST: "{{ lookup('env', 'LEAN_DB_HOST') | default('localhost', true) }}"
+  LEAN_DB_DATABASE: "{{ lookup('env', 'LEAN_DB_DATABASE') }}"
+  LEAN_DB_USER: "{{ lookup('env', 'LEAN_DB_USER') }}"
+  LEAN_DB_PASSWORD: "{{ lookup('env', 'LEAN_DB_PASSWORD') }}"
+  LEAN_LANGUAGE: ja-JP
+  LEAN_DEFAULT_TIMEZONE: Asia/Tokyo
+  # LEAN_SESSION_PASSWORD: "{{ lookup('env', 'LEAN_SESSION_PASSWORD') }}"
+

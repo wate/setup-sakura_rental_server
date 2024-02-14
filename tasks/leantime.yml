@@ -1,0 +1,57 @@
+---
+- name: Get rclone latest version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/Leantime/leantime/releases/latest
+    headers:
+      Accept: application/vnd.github+json
+  register: latest_releases
+- name: Set version variable
+  ansible.builtin.set_fact:
+    leantime_version: "{{ latest_releases.json.tag_name }}"
+- name: Install/Update Leantime
+  ansible.builtin.unarchive:
+    src: https://github.com/Leantime/leantime/releases/download/{{ leantime_version }}/Leantime-{{ leantime_version }}.zip
+    dest: ~/www
+    remote_src: true
+- name: Replace Apache option
+  ansible.builtin.replace:
+    path: ~/www/leantime/public/.htaccess
+    regexp: FollowSymLinks
+    replace: SymLinksIfOwnerMatch
+- name: Change parmission
+  ansible.builtin.file:
+    path: ~/www/leantime/bin/leantime
+    mode: "0755"
+- name: Change parmission
+  ansible.builtin.file:
+    path: ~/www/leantime/{{ item }}
+    mode: "0777"
+  loop:
+    - cache
+    - cache/avatars
+    - cache/views
+    - userfiles
+    - public/userfiles
+- name: Check .env file
+  ansible.builtin.stat:
+    path: ~/www/leantime/config/.env
+  register: dotenv_stat_result
+- name: Copy default .env file
+  ansible.builtin.copy:
+    src: ~/www/leantime/config/sample.env
+    dest: ~/www/leantime/config/.env
+    mode: "0600"
+    remote_src: true
+  when: not dotenv_stat_result.stat.exists
+- name: Update .env file
+  ansible.builtin.lineinfile:
+    path: ~/www/leantime/config/.env
+    regexp: ^{{ item.key }} =
+    line: "{{ item.key }} = {{ \"'\" + item.value + \"'\" if item.value is string else item.value }}"
+  loop: "{{ leantime_env | default({}) | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+# - name: Execute database migration
+#   ansible.builtin.command:
+#     cmd: ./bin/leantime db:migrate
+#     chdir: ~/www/leantime
