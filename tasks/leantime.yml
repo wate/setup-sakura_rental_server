@@ -43,6 +43,7 @@
     mode: "0600"
     remote_src: true
   when: not dotenv_stat_result.stat.exists
+  register: generate_dotenv
 - name: Update .env file
   ansible.builtin.lineinfile:
     path: ~/www/leantime/config/.env
@@ -51,7 +52,15 @@
   loop: "{{ leantime_env | default({}) | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
-# - name: Execute database migration
-#   ansible.builtin.command:
-#     cmd: ./bin/leantime db:migrate
-#     chdir: ~/www/leantime
+- name: Execute database migration
+  ansible.builtin.command:
+    cmd: >
+      ./bin/leantime db:migrate
+      {% if generate_dotenv is changed -%}
+      --email={{ leantime_admin_email }}
+      --password={{ leantime_admin_password }}
+      --company-name={{ leantime_company_name }}
+      --first-name={{ leantime_first_name }}
+      --last-name={{ leantime_last_name }}
+      {% endif %}
+    chdir: ~/www/leantime

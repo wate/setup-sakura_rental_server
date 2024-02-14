@@ -15,3 +15,8 @@ leantime_env:
   LEAN_DEFAULT_TIMEZONE: Asia/Tokyo
   # LEAN_SESSION_PASSWORD: "{{ lookup('env', 'LEAN_SESSION_PASSWORD') }}"
 
+leantime_admin_email: admin@examle.com
+leantime_admin_password: password
+leantime_company_name: 山田商店
+leantime_first_name: 山田
+leantime_last_name: 太郎
