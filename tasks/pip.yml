@@ -1,0 +1,33 @@
+---
+- name: Check installed pip
+  ansible.builtin.stat:
+    path: ~/.local/bin/pip
+  register: pip_result
+- name: Install pip
+  when: >
+    not pip_result.stat.exists
+    or
+    not pip_result.stat.executable
+  block:
+    - name: Download pip setup script
+      ansible.builtin.get_url:
+        url: https://bootstrap.pypa.io/get-pip.py
+        dest: ~/get-pip.py
+        mode: "0644"
+    - name: Install pip
+      ansible.builtin.command:
+        cmd: python ~/get-pip.py
+        creates: ~/.local/bin/pip
+    - name: Remove pip setup script
+      ansible.builtin.file:
+        path: ~/get-pip.py
+        state: absent
+- name: Update ~/.bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} pip ANSIBLE MANAGED BLOCK"
+    content: |
+      if [ -d "$HOME/.local/bin" ] ; then
+          export PATH="$HOME/.local/bin:$PATH"
+      fi
+    mode: "0644"

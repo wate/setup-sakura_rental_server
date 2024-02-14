@@ -1,0 +1,30 @@
+---
+- name: Check installed nodebrew
+  ansible.builtin.stat:
+    path: ~/.nodebrew/nodebrew
+  register: nodebrew_result
+- name: Setup nodebrew
+  when: not nodebrew_result.stat.exists
+  block:
+    - name: Download nodebrew setup script
+      ansible.builtin.get_url:
+        url: https://git.io/nodebrew
+        dest: ~/nodebrew
+        mode: "0644"
+    - name: Install nodebrew
+      ansible.builtin.command:
+        cmd: perl nodebrew setup
+        creates: ~/.nodebrew/current/bin
+    - name: Remove nodebrew setup script
+      ansible.builtin.file:
+        path: ~/nodebrew
+        state: absent
+- name: Update ~/.bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} nodebrew ANSIBLE MANAGED BLOCK"
+    content: |
+      if [ -d "$HOME/.nodebrew/current/bin" ]; then
+          export PATH=$HOME/.nodebrew/current/bin:$PATH
+      fi
+    mode: "0644"

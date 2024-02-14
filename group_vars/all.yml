@@ -1,0 +1,3 @@
+---
+sakura_login_password: "{{ lookup('env', 'SAKURA_LOGIN_PASSWORD') }}"
+wp_default_locale: ja

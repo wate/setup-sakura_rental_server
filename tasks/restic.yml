@@ -1,0 +1,51 @@
+---
+- name: Get rclone latest version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/restic/restic/releases/latest
+    headers:
+      Accept: application/vnd.github+json
+  register: latest_releases
+- name: Set version variable
+  ansible.builtin.set_fact:
+    restic_version: "{{ latest_releases.json.tag_name }}"
+- name: Check restic binary
+  ansible.builtin.stat:
+    path: ~/bun/restic_{{ restic_version[1:] }}_freebsd_amd64
+  register: restic_stat_result
+- name: Install restic
+  when: not restic_stat_result.stat.exists
+  block:
+    - name: Download archive
+      ansible.builtin.get_url:
+        url: https://github.com/restic/restic/releases/download/{{ restic_version }}/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
+        dest: ~/bin/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
+        mode: "0644"
+    - name: Unarchive restic current release archive
+      ansible.builtin.command:
+        cmd: bunzip2 restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
+        creates: ~/bin/restic_{{ restic_version[1:] }}_freebsd_amd64
+        chdir: ~/bin
+    - name: Create restic symlink
+      ansible.builtin.file:
+        path: ~/bin/restic
+        src: ~/bin/restic_{{ restic_version[1:] }}_freebsd_amd64
+        state: link
+        mode: "0755"
+- name: Find cleanup files
+  ansible.builtin.find:
+    paths:
+      - ~/bin
+    file_type: file
+    patterns:
+      - restic_*_freebsd_amd64
+      - restic_*_freebsd_amd64.bz2
+    excludes:
+      - restic_{{ restic_version[1:] }}_freebsd_amd64
+  register: find_result
+- name: Cleanup
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path }}"

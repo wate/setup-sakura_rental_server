@@ -1,0 +1,10 @@
+### Ansible ###
+*.retry
+host_vars/*
+
+### direnv ###
+.direnv
+.envrc
+
+### dotenv ###
+.env

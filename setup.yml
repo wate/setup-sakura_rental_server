@@ -1,0 +1,50 @@
+---
+- name: Setup Sakura Rental Server
+  hosts: all
+  gather_facts: false
+  become: false
+  pre_tasks:
+    - name: 環境変数が定義済みかどうかのチェック
+      ansible.builtin.assert:
+        that:
+          - sakura_login_password is defined
+          - sakura_login_password | length > 0
+        fail_msg: "レンタルサーバーのログインパスワードが未設定です"
+        quiet: true
+  tasks:
+    - name: binディレクトリを作成
+      ansible.builtin.file:
+        path: ~/bin
+        state: directory
+        mode: "0755"
+    - name: Composerのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/composer.yml
+    - name: WP-CLIのセットアップ
+      ansible.builtin.import_tasks:
+        file: tasks/wp-cli.yml
+    - name: bashのセットアップ
+      ansible.builtin.import_tasks:
+        file: tasks/bash.yml
+    - name: pipのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/pip.yml
+    - name: ログインシェルをbashに変更
+      ansible.builtin.import_tasks:
+        file: tasks/login-shell.yml
+    - name: git prompt for bashのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/git-prompt-for-bash.yml
+    - name: Rcloneのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/rclone.yml
+    - name: Resticのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/restic.yml
+    - name: nodebrewのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/nodebrew.yml
+    # - name: Install Node.js
+    #   ansible.builtin.command:
+    #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
+    #     creates: ~/.nodebrew/current/bin/node

@@ -1,0 +1,14 @@
+---
+- name: Check installed composer
+  ansible.builtin.stat:
+    path: /usr/local/bin/composer
+  register: composer_result
+- name: Install composer
+  ansible.builtin.get_url:
+    url: https://getcomposer.org/download/latest-stable/composer.phar
+    dest: ~/bin/composer
+    mode: "0755"
+  when: >
+    not composer_result.stat.exists
+    or
+    not composer_result.stat.executable

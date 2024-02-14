@@ -1,0 +1,32 @@
+---
+- name: Create/update ~/.bash_profile
+  ansible.builtin.blockinfile:
+    path: ~/.bash_profile
+    marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
+    content: |
+      if [ -f ~/.bashrc ]; then
+          . ~/.bashrc
+      fi
+    mode: "0644"
+    create: true
+- name: Create/update ~/.bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
+    content: |
+      export LANG=ja_JP.UTF-8
+      if [ -f ~/.secret ]; then
+          . ~/.secret
+      fi
+    mode: "0644"
+    create: true
+- name: Create/update ~/.secret
+  ansible.builtin.blockinfile:
+    path: ~/.secret
+    marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
+    content: |
+      {% for secret_env_name, secret_env_value in (secret_env | default({})).items() -%}
+      export {{ secret_env_name }}="{{ secret_env_value }}"
+      {% endfor %}
+    mode: "0600"
+    create: true
