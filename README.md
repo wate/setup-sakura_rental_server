@@ -7,7 +7,7 @@
 
 * [Composer](https://getcomposer.org/)のインストール
 * [WP-CLI](https://wp-cli.org/ja/)のインストール
-* pip・[pipx](https://pipx.pypa.io/stable/)のインストール
+* pipおよび[pipx](https://pipx.pypa.io/stable/)のインストール
 * ログインシェルをbashに変更
 * [git prompt for bash](https://github.com/magicmonty/bash-git-prompt)のインストール
 * [Rclone](https://rclone.org/)のインストール
@@ -17,12 +17,12 @@
 前提条件/事前準備
 ------------------
 
-- Ansibleがインストールされていること
-    - [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-- さくらのレンタルサーバーにSSHでログインできること
-    - **ライトプランを利用している場合は利用できません。**
-- SSH公開鍵認証の設定を行っていること
-    - [SSH公開鍵認証の設定をしたい](https://help.sakura.ad.jp/rs/2804/)
+* Ansibleがインストールされていること
+    * [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+* さくらのレンタルサーバーにSSHでログインできること
+    * **ライトプランを利用している場合は利用できません。**
+* SSH公開鍵認証の設定を行っていること
+    * [SSH公開鍵認証の設定をしたい](https://help.sakura.ad.jp/rs/2804/)
 
 利用方法
 ------------------
@@ -76,7 +76,6 @@ Tips
 
 * [第765回　高度なことが簡単にできる多機能バックアップツール、Restic［前編］ | gihyo.jp](https://gihyo.jp/admin/serial/01/ubuntu-recipe/0765)
 * [第766回　高度なことが簡単にできる多機能バックアップツール、Restic［後編］ | gihyo.jp](https://gihyo.jp/admin/serial/01/ubuntu-recipe/0766)
-
 
 License
 ------------------
