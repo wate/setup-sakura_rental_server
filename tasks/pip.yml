@@ -31,3 +31,12 @@
           export PATH="$HOME/.local/bin:$PATH"
       fi
     mode: "0644"
+- name: Install pipx
+  ansible.builtin.pip:
+    name: pipx
+    executable: ~/.local/bin/pip
+- name: Add shell completions
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} pipx ANSIBLE MANAGED BLOCK"
+    content: eval "$(register-python-argcomplete pipx)"
