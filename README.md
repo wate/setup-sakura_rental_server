@@ -3,6 +3,17 @@
 
 さくらのレンタルサーバーの初期セットアップを行うことが出来ます。
 
+初期セットアップで行うことは以下の通りです。
+
+* [Composer](https://getcomposer.org/)のインストール
+* [WP-CLI](https://wp-cli.org/ja/)のインストール
+* pip・[pipx](https://pipx.pypa.io/stable/)のインストール
+* ログインシェルをbashに変更
+* [git prompt for bash](https://github.com/magicmonty/bash-git-prompt)のインストール
+* [Rclone](https://rclone.org/)のインストール
+* [Restic](https://restic.net/)のインストール
+* [nodebrew](https://github.com/hokaccha/nodebrew)のインストール
+
 前提条件/事前準備
 ------------------
 
@@ -13,7 +24,7 @@
 - SSH公開鍵認証の設定を行っていること
     - [SSH公開鍵認証の設定をしたい](https://help.sakura.ad.jp/rs/2804/)
 
-利用方法(1)
+利用方法
 ------------------
 
 ### 単一のサーバーに適用する場合
@@ -59,6 +70,13 @@ all:
       ansible_user: freckles
       ansible_ssh_private_key_file: ~/.ssh/id_rsa
 ```
+
+Tips
+------------------
+
+* [第765回　高度なことが簡単にできる多機能バックアップツール、Restic［前編］ | gihyo.jp](https://gihyo.jp/admin/serial/01/ubuntu-recipe/0765)
+* [第766回　高度なことが簡単にできる多機能バックアップツール、Restic［後編］ | gihyo.jp](https://gihyo.jp/admin/serial/01/ubuntu-recipe/0766)
+
 
 License
 ------------------
