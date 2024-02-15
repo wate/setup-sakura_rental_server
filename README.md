@@ -10,6 +10,9 @@
 * pipおよび[pipx](https://pipx.pypa.io/stable/)のインストール
 * ログインシェルをbashに変更
 * [git prompt for bash](https://github.com/magicmonty/bash-git-prompt)のインストール
+* MySQLの接続設定ファイルの作成
+    * mysqlコマンド実行時にデフォルトで設定するサーバー・ユーザー名・パスワードを設定するファイルを作成します。
+    * このファイルを作成することで、mysqlコマンド実行時にサーバー・ユーザー名・パスワードを指定する必要がなくなります。
 * [Rclone](https://rclone.org/)のインストール
 * [Restic](https://restic.net/)のインストール
 * [nodebrew](https://github.com/hokaccha/nodebrew)のインストール
