@@ -77,4 +77,4 @@
 #     month: "{{ item.month | string if item.month is defined else omit }}"
 #     weekday: "{{ item.weekday | string if item.weekday is defined else omit }}"
 #     disabled: "{{ item.disabled | default(false) }}"
-#   loop: "{{ leantime_cron_jons | default([]) }}"
+#   loop: "{{ leantime_cron_jobs | default([]) }}"

@@ -40,7 +40,7 @@ leantime_initial_account:
 ## --------------
 ## leantime用cronジョブ
 ## --------------
-# leantime_cron_jons:
+# leantime_cron_jobs:
 #   - name: "Backs up database"
 #     command: >
 #       cd ~/www/leantime
