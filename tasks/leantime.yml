@@ -21,11 +21,11 @@
     path: ~/www/leantime/public/.htaccess
     regexp: FollowSymLinks
     replace: SymLinksIfOwnerMatch
-- name: Change parmission
+- name: Change parmission(cli script file)
   ansible.builtin.file:
     path: ~/www/leantime/bin/leantime
     mode: "0755"
-- name: Change parmission
+- name: Change parmission(directories)
   ansible.builtin.file:
     path: ~/www/leantime/{{ item }}
     mode: "0777"
@@ -67,3 +67,14 @@
       --last-name={{ leantime_initial_account.last_name }}
       {% endif %}
     chdir: ~/www/leantime
+- name: Set leantime cron job
+  ansible.builtin.cron:
+    name: "Leantime:{{ item.name }}"
+    job: "{{ item.command }}"
+    minute: "{{ item.minute | string if item.minute is defined else omit }}"
+    hour: "{{ item.hour | string if item.hour is defined else omit }}"
+    day: "{{ item.day | string if item.day is defined else omit }}"
+    month: "{{ item.month | string if item.month is defined else omit }}"
+    weekday: "{{ item.weekday | string if item.weekday is defined else omit }}"
+    disabled: "{{ item.disabled | default(false) }}"
+  loop: "{{ leantime_cron_jons | default([]) }}"

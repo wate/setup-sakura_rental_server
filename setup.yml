@@ -44,7 +44,10 @@
     - name: nodebrewのインストール
       ansible.builtin.import_tasks:
         file: tasks/nodebrew.yml
-    # - name: Install Node.js
+    # - name: Node.jsのコンパイル
     #   ansible.builtin.command:
     #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
     #     creates: ~/.nodebrew/current/bin/node
+    # - name: Leantimeのインストール
+    #   ansible.builtin.import_tasks:
+    #     file: tasks/leantime.yml

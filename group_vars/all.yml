@@ -28,11 +28,34 @@ leantime_env:
   # LEAN_SESSION_PASSWORD: "{{ lookup('env', 'LEAN_SESSION_PASSWORD') }}"
 
 ## --------------
-## 初期インストール時に登録するアカウント
+## Leantime初期インストール時に登録するアカウント
 ## --------------
 leantime_initial_account:
-  admin_email: admin@{{ inventory_hostname }}
+  admin_email: postmaster@{{ inventory_hostname }}
   admin_password: password
   company_name: 山田商店
   first_name: 山田
   last_name: 太郎
+
+## --------------
+## leantime用cronジョブ
+## --------------
+leantime_cron_jons: []
+#   - name: "Backs up database"
+#     command: >
+#       cd ~/www/leantime
+#       &&
+#       ./bin/leantime db:backup
+#     hour: 06
+#     minute: 30
+#   - name: "Delete the cached mutex files created by scheduler"
+#     command: >
+#       cd ~/www/leantime
+#       &&
+#       ./bin/leantime schedule:clear-cache
+#     minute: 15
+#   - name: "Run the scheduled commands"
+#     command: >
+#       cd ~/www/leantime
+#       &&
+#       ./bin/leantime schedule:run
