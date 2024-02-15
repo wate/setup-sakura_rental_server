@@ -35,6 +35,9 @@
     - name: git prompt for bashのインストール
       ansible.builtin.import_tasks:
         file: tasks/git-prompt-for-bash.yml
+    - name: MySQL接続設定ファイルの生成
+      ansible.builtin.import_tasks:
+        file: tasks/mysql.yml
     - name: Rcloneのインストール
       ansible.builtin.import_tasks:
         file: tasks/rclone.yml

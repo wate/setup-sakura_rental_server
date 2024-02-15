@@ -10,6 +10,13 @@ sakura_login_password: "{{ lookup('env', 'SAKURA_LOGIN_PASSWORD') }}"
 wp_default_locale: ja
 
 ## --------------
+## データベース(MySQL)の接続情報
+## --------------
+mysql_db_server: "{{ lookup('env', 'MYSQL_DB_SERVER') }}"
+mysql_db_user: "{{ lookup('env', 'MYSQL_DB_USER') }}"
+mysql_db_password: "{{ lookup('env', 'MYSQL_DB_PASSWORD') }}"
+
+## --------------
 ## インストールするLeantimeのバージョン
 ## --------------
 leantime_version: latest

@@ -1,0 +1,43 @@
+---
+- name: Set MySQL connection setting(auto-rehash)
+  community.general.ini_file:
+    path: ~/.my.cnf
+    section: mysql
+    option: auto-rehash
+    allow_no_value: true
+    mode: "0600"
+    create: true
+- name: Set MySQL connection setting(default-character-set)
+  community.general.ini_file:
+    path: ~/.my.cnf
+    section: client
+    option: default-character-set
+    value: utf8mb4
+- name: Set MySQL connection setting(host)
+  community.general.ini_file:
+    path: ~/.my.cnf
+    section: client
+    option: host
+    value: "{{ mysql_db_server }}"
+    mode: "0600"
+  when:
+    - mysql_db_server is defined
+    - mysql_db_server | length > 0
+- name: Set MySQL connection setting(user)
+  community.general.ini_file:
+    path: ~/.my.cnf
+    section: client
+    option: user
+    value: "{{ mysql_db_user }}"
+  when:
+    - mysql_db_user is defined
+    - mysql_db_user | length > 0
+- name: Set MySQL connection setting(password)
+  community.general.ini_file:
+    path: ~/.my.cnf
+    section: client
+    option: password
+    value: "{{ mysql_db_password }}"
+  when:
+    - mysql_db_password is defined
+    - mysql_db_password | length > 0
