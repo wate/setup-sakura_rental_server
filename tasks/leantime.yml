@@ -1,13 +1,16 @@
 ---
-- name: Get rclone latest version
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/Leantime/leantime/releases/latest
-    headers:
-      Accept: application/vnd.github+json
-  register: latest_releases
-- name: Set version variable
-  ansible.builtin.set_fact:
-    leantime_version: "{{ latest_releases.json.tag_name }}"
+- name: Set Install version variable
+  when: leantime_version == 'latest'
+  block:
+    - name: Get leantime latest version
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/Leantime/leantime/releases/latest
+        headers:
+          Accept: application/vnd.github+json
+      register: latest_releases
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        leantime_version: "{{ latest_releases.json.tag_name }}"
 - name: Install/Update Leantime
   ansible.builtin.unarchive:
     src: https://github.com/Leantime/leantime/releases/download/{{ leantime_version }}/Leantime-{{ leantime_version }}.zip
@@ -47,7 +50,7 @@
 - name: Update .env file
   ansible.builtin.lineinfile:
     path: ~/www/leantime/config/.env
-    regexp: ^{{ item.key }} =
+    regexp: ^{{ item.key }}\s*=
     line: "{{ item.key }} = {{ \"'\" + item.value + \"'\" if item.value is string else item.value }}"
   loop: "{{ leantime_env | default({}) | dict2items }}"
   loop_control:
@@ -57,10 +60,10 @@
     cmd: >
       ./bin/leantime db:migrate
       {% if generate_dotenv is changed -%}
-      --email={{ leantime_admin_email }}
-      --password={{ leantime_admin_password }}
-      --company-name={{ leantime_company_name }}
-      --first-name={{ leantime_first_name }}
-      --last-name={{ leantime_last_name }}
+      --email={{ leantime_initial_account.admin_email }}
+      --password={{ leantime_initial_account.admin_password }}
+      --company-name={{ leantime_initial_account.company_name }}
+      --first-name={{ leantime_initial_account.first_name }}
+      --last-name={{ leantime_initial_account.last_name }}
       {% endif %}
     chdir: ~/www/leantime

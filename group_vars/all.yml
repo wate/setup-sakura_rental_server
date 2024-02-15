@@ -1,10 +1,22 @@
 ---
+## --------------
+## レンタルサーバーのログインパスワード
+## --------------
 sakura_login_password: "{{ lookup('env', 'SAKURA_LOGIN_PASSWORD') }}"
 
-### WP-CLI
+## --------------
+## ダウンロードするWordPressのデフォルトのロケール
+## --------------
 wp_default_locale: ja
 
-### Leantime
+## --------------
+## インストールするLeantimeのバージョン
+## --------------
+leantime_version: latest
+
+## --------------
+## Leantimeの設定
+## --------------
 leantime_env:
   LEAN_DEBUG: 0
   LEAN_DB_HOST: "{{ lookup('env', 'LEAN_DB_HOST') | default('localhost', true) }}"
@@ -15,8 +27,12 @@ leantime_env:
   LEAN_DEFAULT_TIMEZONE: Asia/Tokyo
   # LEAN_SESSION_PASSWORD: "{{ lookup('env', 'LEAN_SESSION_PASSWORD') }}"
 
-leantime_admin_email: admin@examle.com
-leantime_admin_password: password
-leantime_company_name: 山田商店
-leantime_first_name: 山田
-leantime_last_name: 太郎
+## --------------
+## 初期インストール時に登録するアカウント
+## --------------
+leantime_initial_account:
+  admin_email: admin@{{ inventory_hostname }}
+  admin_password: password
+  company_name: 山田商店
+  first_name: 山田
+  last_name: 太郎
