@@ -50,6 +50,9 @@
     - name: nodebrewのインストール
       ansible.builtin.import_tasks:
         file: tasks/nodebrew.yml
+    # - name: Webサイトの設定
+    #   ansible.builtin.import_tasks:
+    #     file: tasks/website.yml
     # - name: Node.jsのコンパイル
     #   ansible.builtin.command:
     #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
