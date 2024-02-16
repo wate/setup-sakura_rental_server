@@ -13,6 +13,7 @@
     section: client
     option: default-character-set
     value: utf8mb4
+    mode: "0600"
 - name: Set MySQL connection setting(host)
   community.general.ini_file:
     path: ~/.my.cnf
@@ -29,6 +30,7 @@
     section: client
     option: user
     value: "{{ mysql_db_user }}"
+    mode: "0600"
   when:
     - mysql_db_user is defined
     - mysql_db_user | length > 0
@@ -38,6 +40,7 @@
     section: client
     option: password
     value: "{{ mysql_db_password }}"
+    mode: "0600"
   when:
     - mysql_db_password is defined
     - mysql_db_password | length > 0
