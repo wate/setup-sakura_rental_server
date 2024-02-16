@@ -4,7 +4,7 @@
     name: pexpect
     executable: ~/.local/bin/pip
     extra_args: --user
-- name: Cheange login shell
+- name: Change login shell
   ansible.builtin.expect:
     command: chsh -s /usr/local/bin/bash
     responses:
