@@ -3,6 +3,7 @@
   ansible.builtin.pip:
     name: pexpect
     executable: ~/.local/bin/pip
+    extra_args: --user
 - name: Cheange login shell
   ansible.builtin.expect:
     command: chsh -s /usr/local/bin/bash
