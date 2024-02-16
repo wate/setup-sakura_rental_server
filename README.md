@@ -5,6 +5,9 @@
 
 初期セットアップで行うことは以下の通りです。
 
+* PHPのセットアップ
+    * 利用するPHPのバージョンを指定します
+    * [PHPのバージョンを変更したい | さくらのサポート情報](https://help.sakura.ad.jp/rs/2241/)
 * [Composer](https://getcomposer.org/)のインストール
 * [WP-CLI](https://wp-cli.org/ja/)のインストール
 * pipおよび[pipx](https://pipx.pypa.io/stable/)のインストール
@@ -25,7 +28,7 @@
 * さくらのレンタルサーバーにSSHでログインできること
     * **ライトプランを利用している場合は利用できません。**
 * SSH公開鍵認証の設定を行っていること
-    * [SSH公開鍵認証の設定をしたい](https://help.sakura.ad.jp/rs/2804/)
+    * [SSH公開鍵認証の設定をしたい | さくらのサポート情報](https://help.sakura.ad.jp/rs/2804/)
 
 利用方法
 ------------------

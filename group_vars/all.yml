@@ -5,6 +5,11 @@
 sakura_login_password: "{{ lookup('env', 'SAKURA_LOGIN_PASSWORD') }}"
 
 ## --------------
+## 利用するPHPのバージョン
+## --------------
+php_version: 8.2
+
+## --------------
 ## ダウンロードするWordPressのデフォルトのロケール
 ## --------------
 wp_default_locale: ja
