@@ -4,6 +4,9 @@
     path: ~/.bash_profile
     marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
     content: |
+      export LANG=ja_JP.UTF-8
+      export PATH=$HOME/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
+      export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$"
       if [ -f ~/.bashrc ]; then
           . ~/.bashrc
       fi
@@ -14,8 +17,6 @@
     path: ~/.bashrc
     marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
     content: |
-      export LANG=ja_JP.UTF-8
-      export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$"
       if [ -f ~/.secret ]; then
           . ~/.secret
       fi

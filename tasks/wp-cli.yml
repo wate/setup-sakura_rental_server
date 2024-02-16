@@ -1,19 +1,9 @@
 ---
-- name: Check installed WP-CLI
-  ansible.builtin.stat:
-    path: /usr/local/bin/wp
-  register: wp_result
-- name: Setup WP-CLI
-  when: >
-    not wp_result.stat.exists
-    or
-    not wp_result.stat.executable
-  block:
-    - name: Install WP-CLI
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-        dest: ~/bin/wp
-        mode: "0755"
+- name: Install/update WP-CLI
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    dest: ~/bin/wp
+    mode: "0755"
 - name: Create WP-CLI user config directory
   ansible.builtin.file:
     path: ~/.wp-cli
