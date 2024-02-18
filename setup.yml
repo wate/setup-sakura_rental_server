@@ -50,6 +50,9 @@
     - name: nodebrewのインストール
       ansible.builtin.import_tasks:
         file: tasks/nodebrew.yml
+    - name: goのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/golang.yml
     # - name: Webサイトの設定
     #   ansible.builtin.import_tasks:
     #     file: tasks/website.yml

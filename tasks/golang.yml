@@ -1,0 +1,40 @@
+---
+- name: Set Install version variable
+  when: golang_version | default('latest') == 'latest'
+  block:
+    - name: Get golang latest version
+      ansible.builtin.uri:
+        url: https://endoflife.date/api/go.json
+      register: golang_cycle_result
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        golang_version: "{{ golang_cycle_result.json[0].latest }}"
+- name: Download golang archive
+  ansible.builtin.get_url:
+    url: https://go.dev/dl/go{{ golang_version }}.freebsd-amd64.tar.gz
+    dest: ~/.ansible/tmp/go{{ golang_version }}.freebsd-amd64.tar.gz
+    mode: "0644"
+  register: download_golang_archive_result
+- name: Check golang binary
+  ansible.builtin.stat:
+    path: ~/go/bin/go
+  register: golang_bin_stat_result
+- name: Unarchive golang archive file
+  ## BSD版のtarではansible.builtin.unarchiveモジュールが利用できないため
+  ## ansible.builtin.commandで対応
+  ansible.builtin.command:
+    cmd: tar vxfz ~/.ansible/tmp/go{{ golang_version }}.freebsd-amd64.tar.gz
+    chdir: ~/
+  when: >
+    not golang_bin_stat_result.stat.exists
+    or
+    download_golang_archive_result is changed
+- name: Update ~/.bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} golang ANSIBLE MANAGED BLOCK"
+    content: |
+      export PATH=$HOME/go/bin:$PATH
+      export GOROOT=$HOME/go
+      export GOPATH=$HOME/go
+    mode: "0644"
