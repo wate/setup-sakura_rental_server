@@ -3,6 +3,8 @@
   ansible.builtin.command:
     cmd: nice -n 20 ~/.cargo/bin/cargo install eza
     chdir: ~/
+  environment:
+    CARGO_TARGET_DIR: ~/tmp
 - name: Set ls command alias
   ansible.builtin.lineinfile:
     path: ~/.bashrc

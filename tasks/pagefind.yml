@@ -1,0 +1,7 @@
+---
+- name: Install pagefind
+  ansible.builtin.command:
+    cmd: nice -n 20 ~/.cargo/bin/cargo install pagefind
+    chdir: ~/
+  environment:
+    CARGO_TARGET_DIR: ~/tmp
