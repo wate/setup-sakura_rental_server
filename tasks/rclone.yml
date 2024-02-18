@@ -18,7 +18,7 @@
 - name: Create rclone symlink
   ansible.builtin.file:
     path: ~/bin/rclone
-    src: ~/bin/rclone-{{ rclone_version }}-freebsd-amd64/rclone
+    src: rclone-{{ rclone_version }}-freebsd-amd64/rclone
     state: link
     mode: "0755"
 - name: Find cleanup directories
