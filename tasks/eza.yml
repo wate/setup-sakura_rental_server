@@ -1,4 +1,12 @@
 ---
+- name: Check cargo command
+  ansible.builtin.stat:
+    path: ~/.cargo/bin/cargo
+  register: cargo_result
+- name: rustのインストール
+  ansible.builtin.import_tasks:
+    file: rust.yml
+  when: not cargo_result.stat.exists
 - name: Install eza
   ansible.builtin.command:
     cmd: nice -n 20 ~/.cargo/bin/cargo install eza
