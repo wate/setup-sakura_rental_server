@@ -35,6 +35,5 @@
     marker: "# {mark} golang ANSIBLE MANAGED BLOCK"
     content: |
       export PATH=$HOME/go/bin:$PATH
-      export GOROOT=$HOME/go
       export GOPATH=$HOME/go
     mode: "0644"
