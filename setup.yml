@@ -61,13 +61,10 @@
     - name: rustのインストール
       ansible.builtin.import_tasks:
         file: tasks/rust.yml
-    # - name: Webサイトの設定
-    #   ansible.builtin.import_tasks:
-    #     file: tasks/website.yml
+    - name: ezaのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/eza.yml
     # - name: Node.jsのコンパイル
     #   ansible.builtin.command:
     #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
     #     creates: ~/.nodebrew/current/bin/node
-    # - name: Leantimeのインストール
-    #   ansible.builtin.import_tasks:
-    #     file: tasks/leantime.yml

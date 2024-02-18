@@ -1,5 +1,4 @@
 ---
-## @see https://hacolab.hatenablog.com/entry/2019/07/14/182351
 - name: Check golang binary
   ansible.builtin.stat:
     path: ~/.cargo/bin/rustc

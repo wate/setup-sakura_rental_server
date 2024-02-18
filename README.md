@@ -19,6 +19,9 @@
 * [Rclone](https://rclone.org/)のインストール
 * [Restic](https://restic.net/)のインストール
 * [nodebrew](https://github.com/hokaccha/nodebrew)のインストール
+* [go](https://go.dev/)のインストール
+* [rust](https://www.rust-lang.org/ja)のインストール
+* [eza](https://eza.rocks/)のインストール
 
 前提条件/事前準備
 ------------------

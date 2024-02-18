@@ -1,0 +1,10 @@
+---
+- name: Install eza
+  ansible.builtin.command:
+    cmd: nice -n 20 ~/.cargo/bin/cargo install eza
+    chdir: ~/
+- name: Set ls command alias
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    regexp: ^alias ls=
+    line: alias ls="eza --git --header"
