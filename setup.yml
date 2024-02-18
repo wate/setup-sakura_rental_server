@@ -17,6 +17,11 @@
         path: ~/bin
         state: directory
         mode: "0755"
+    - name: tmpディレクトリを作成
+      ansible.builtin.file:
+        path: ~/tmp
+        state: directory
+        mode: "0755"
     - name: PHPのセットアップ
       ansible.builtin.import_tasks:
         file: tasks/php.yml
@@ -53,6 +58,9 @@
     - name: goのインストール
       ansible.builtin.import_tasks:
         file: tasks/golang.yml
+    - name: rustのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/rust.yml
     # - name: Webサイトの設定
     #   ansible.builtin.import_tasks:
     #     file: tasks/website.yml
