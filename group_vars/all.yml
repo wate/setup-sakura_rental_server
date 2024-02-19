@@ -15,6 +15,11 @@ php_version: 8.2
 wp_default_locale: ja
 
 ## --------------
+## git prompt for bashのカスタムテーマファイルのURL
+## --------------
+# git_prompt_custom_theme_url: https://raw.githubusercontent.com/wate/Dotfiles/master/.git-prompt-colors.sh
+
+## --------------
 ## データベース(MySQL)の接続情報
 ## --------------
 mysql_db_server: "{{ lookup('env', 'MYSQL_DB_SERVER') }}"
