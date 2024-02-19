@@ -32,3 +32,15 @@
       {% endfor %}
     mode: "0600"
     create: true
+- name: Set ls command alias
+  ansible.builtin.lineinfile:
+    path: ~/.bashrc
+    regexp: ^alias {{ item.alias }}=
+    line: alias {{ item.alias }}="{{ item.value }}"
+  loop:
+    - alias: ls
+      value: ls --color=auto
+    - alias: ll
+      value: ls -l
+    - alias: la
+      value: ls -A
