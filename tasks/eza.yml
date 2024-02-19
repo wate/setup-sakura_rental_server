@@ -16,5 +16,12 @@
 - name: Set ls command alias
   ansible.builtin.lineinfile:
     path: ~/.bashrc
-    regexp: ^alias ls=
-    line: alias ls="eza --git --header"
+    regexp: ^alias {{ item.alias }}=
+    line: alias {{ item.alias }}="{{ item.value }}"
+  loop:
+    - alias: ls
+      value: eza --git --header
+    - alias: ll
+      value: ls -l
+    - alias: la
+      value: ls -a
