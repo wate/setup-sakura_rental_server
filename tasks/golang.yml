@@ -29,12 +29,17 @@
     not golang_bin_stat_result.stat.exists
     or
     download_golang_archive_result is changed
+- name: Create Go project directory
+  ansible.builtin.file:
+    path: ~/goprojects
+    state: directory
+    mode: "0755"
 - name: Update ~/.bashrc
   ansible.builtin.blockinfile:
     path: ~/.bashrc
     marker: "# {mark} golang ANSIBLE MANAGED BLOCK"
     content: |
-      export PATH=$HOME/go/bin:$PATH
       export GOROOT=$HOME/go
-      #export GOPATH=$HOME/go
+      export GOPATH=$HOME/goprojects
+      export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
     mode: "0644"
