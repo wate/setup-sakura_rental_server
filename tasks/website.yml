@@ -15,15 +15,3 @@
   loop: "{{ websites | default([]) | selectattr('alias', 'defined') | list }}"
   loop_control:
     label: "{{ item.name | default(item.url) }}"
-- name: Set default domain redirect setting
-  ansible.builtin.blockinfile:
-    path: ~/www/.htaccess
-    content: |
-      RewriteEngine On
-      RewriteRule ^(\.well-known/.*)$ $1 [L]
-      RewriteRule ^(.*)$ {{ default_domain_redirect_url }}$1 [R=301,L]
-    mode: "0644"
-    create: true
-  when:
-    - default_domain_redirect_url is defined
-    - default_domain_redirect_url | length > 0
