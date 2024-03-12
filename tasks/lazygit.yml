@@ -13,11 +13,26 @@
     url: https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_version }}/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
     dest: ~/tmp/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
     mode: "0644"
+  register: download_result
 - name: Unarchive lazygit current release archive
   ansible.builtin.command:
     cmd: tar vxfz lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz --include=lazygit -C ~/bin
     chdir: ~/tmp
-- name: Remove download release archive
+  when: download_result is changed
+- name: Find cleanup directories
+  ansible.builtin.find:
+    paths:
+      - ~/tmp
+    file_type: directory
+    patterns:
+      - lazygit_*_freebsd_x86_64.tar.gz
+    excludes:
+      - lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
+  register: find_result
+- name: Cleanup directories
   ansible.builtin.file:
-    path: ~/tmp/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
+    path: "{{ item.path }}"
     state: absent
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path }}"
