@@ -1,0 +1,23 @@
+---
+- name: Get rclone latest version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+    headers:
+      Accept: application/vnd.github+json
+  register: latest_releases
+- name: Set version variable
+  ansible.builtin.set_fact:
+    lazygit_version: "{{ latest_releases.json.tag_name }}"
+- name: Download release archive
+  ansible.builtin.get_url:
+    url: https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_version }}/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
+    dest: ~/tmp/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
+    mode: "0644"
+- name: Unarchive lazygit current release archive
+  ansible.builtin.command:
+    cmd: tar vxfz lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz --include=lazygit -C ~/bin
+    chdir: ~/tmp
+- name: Remove download release archive
+  ansible.builtin.file:
+    path: ~/tmp/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz
+    state: absent
