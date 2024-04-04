@@ -67,6 +67,9 @@
     - name: lazygitのインストール
       ansible.builtin.import_tasks:
         file: tasks/lazygit.yml
+    - name: leantimeのインストール
+      ansible.builtin.import_tasks:
+        file: tasks/leantime.yml
     # - name: Node.jsのコンパイル
     #   ansible.builtin.command:
     #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
