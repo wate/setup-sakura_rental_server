@@ -25,52 +25,79 @@
     - name: PHPのセットアップ
       ansible.builtin.import_tasks:
         file: tasks/php.yml
+      tags: php
     - name: Composerのインストール
       ansible.builtin.import_tasks:
         file: tasks/composer.yml
+      tags: composer
     - name: WP-CLIのセットアップ
       ansible.builtin.import_tasks:
         file: tasks/wp-cli.yml
+      tags:
+        - wp
+        - wp-cli
+        - wp_cli
     - name: bashのセットアップ
       ansible.builtin.import_tasks:
         file: tasks/bash.yml
+      tags: bash
     - name: pipのインストール
       ansible.builtin.import_tasks:
         file: tasks/pip.yml
+      tags: pip
     - name: ログインシェルをbashに変更
       ansible.builtin.import_tasks:
         file: tasks/login-shell.yml
+      tags:
+        - shell
+        - login-shell
+        - login_shell
     - name: git prompt for bashのインストール
       ansible.builtin.import_tasks:
         file: tasks/git-prompt.yml
+      tags:
+        - git
+        - prompt
+        - git-prompt
+        - git_prompt
     - name: MySQL接続設定ファイルの生成
       ansible.builtin.import_tasks:
         file: tasks/mysql.yml
-    - name: Rcloneのインストール
+      tags: mysql
+    - name: rcloneのインストール
       ansible.builtin.import_tasks:
         file: tasks/rclone.yml
+      tags: rclone
     - name: Resticのインストール
       ansible.builtin.import_tasks:
         file: tasks/restic.yml
+      tags: restic
     - name: nodebrewのインストール
       ansible.builtin.import_tasks:
         file: tasks/nodebrew.yml
+      tags: nodebrew
     - name: goのインストール
       ansible.builtin.import_tasks:
         file: tasks/golang.yml
+      tags: go
     - name: rustのインストール
       ansible.builtin.import_tasks:
         file: tasks/rust.yml
+      tags: rust
     - name: ezaのインストール
       ansible.builtin.import_tasks:
         file: tasks/eza.yml
+      tags: eza
     - name: lazygitのインストール
       ansible.builtin.import_tasks:
         file: tasks/lazygit.yml
+      tags: lazygit
     # - name: leantimeのインストール
     #   ansible.builtin.import_tasks:
     #     file: tasks/leantime.yml
+    #   tags: leantime
     # - name: Node.jsのコンパイル
     #   ansible.builtin.command:
     #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
     #     creates: ~/.nodebrew/current/bin/node
+    #   tags: nodejs
