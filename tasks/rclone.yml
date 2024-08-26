@@ -11,7 +11,7 @@
 - name: Unarchive rclone current release archive
   ansible.builtin.unarchive:
     src: https://github.com/rclone/rclone/releases/download/{{ rclone_version }}/rclone-{{ rclone_version }}-freebsd-amd64.zip
-    dest: ~/bin
+    dest: "{{ home_dir }}/bin"
     include:
       - rclone-{{ rclone_version }}-freebsd-amd64/rclone
     remote_src: true

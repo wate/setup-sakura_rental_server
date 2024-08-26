@@ -14,20 +14,20 @@
 - name: Install/Update Leantime
   ansible.builtin.unarchive:
     src: https://github.com/Leantime/leantime/releases/download/{{ leantime_version }}/Leantime-{{ leantime_version }}.zip
-    dest: ~/www
+    dest: "{{ home_dir }}/www"
     remote_src: true
 - name: Replace Apache option
   ansible.builtin.replace:
-    path: ~/www/leantime/public/.htaccess
+    path: "{{ home_dir }}/www/leantime/public/.htaccess"
     regexp: FollowSymLinks
     replace: SymLinksIfOwnerMatch
 - name: Change parmission(cli script file)
   ansible.builtin.file:
-    path: ~/www/leantime/bin/leantime
+    path: "{{ home_dir }}/www/leantime/bin/leantime"
     mode: "0755"
 - name: Change parmission(directories)
   ansible.builtin.file:
-    path: ~/www/leantime/{{ item }}
+    path: "{{ home_dir }}/www/leantime/{{ item }}"
     mode: "0777"
   loop:
     - cache
@@ -37,19 +37,19 @@
     - public/userfiles
 - name: Check .env file
   ansible.builtin.stat:
-    path: ~/www/leantime/config/.env
+    path: "{{ home_dir }}/www/leantime/config/.env"
   register: dotenv_stat_result
 - name: Copy default .env file
   ansible.builtin.copy:
-    src: ~/www/leantime/config/sample.env
-    dest: ~/www/leantime/config/.env
+    src: "{{ home_dir }}/www/leantime/config/sample.env"
+    dest: "{{ home_dir }}/www/leantime/config/.env"
     mode: "0644"
     remote_src: true
   when: not dotenv_stat_result.stat.exists
   register: generate_dotenv
 - name: Update .env file
   ansible.builtin.lineinfile:
-    path: ~/www/leantime/config/.env
+    path: "{{ home_dir }}/www/leantime/config/.env"
     regexp: ^{{ item.key }}\s*=
     line: "{{ item.key }} = {{ \"'\" + item.value + \"'\" if item.value is string else item.value }}"
   loop: "{{ leantime_env | default({}) | dict2items }}"
@@ -66,4 +66,4 @@
       --first-name={{ leantime_initial_account.first_name }}
       --last-name={{ leantime_initial_account.last_name }}
       {% endif %}
-    chdir: ~/www/leantime
+    chdir: "{{ home_dir }}/www/leantime"

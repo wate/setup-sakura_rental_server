@@ -2,7 +2,7 @@
 - name: Install pexpect
   ansible.builtin.pip:
     name: pexpect
-    executable: ~/.local/bin/pip
+    executable: "{{ home_dir }}/.local/bin/pip"
     extra_args: --user
 - name: Change login shell
   ansible.builtin.expect:

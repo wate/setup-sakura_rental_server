@@ -1,6 +1,6 @@
 ---
 - name: Set use PHP version
   ansible.builtin.lineinfile:
-    path: ~/.php.version
+    path: "{{ home_dir }}/.php.version"
     regexp: ".*"
     line: "{{ php_version }}"

@@ -2,16 +2,16 @@
 - name: Install/update WP-CLI
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-    dest: ~/bin/wp
+    dest: "{{ home_dir }}/bin/wp"
     mode: "0755"
 - name: Create WP-CLI user config directory
   ansible.builtin.file:
-    path: ~/.wp-cli
+    path: "{{ home_dir }}/.wp-cli"
     state: directory
     mode: "0755"
 - name: Create/update WP-CLI user config
   ansible.builtin.blockinfile:
-    path: ~/.wp-cli/config.yml
+    path: "{{ home_dir }}/.wp-cli/config.yml"
     marker: "# {mark} wp-cli ANSIBLE MANAGED BLOCK"
     content: |
       ---

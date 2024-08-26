@@ -4,7 +4,7 @@
     name: mkdocs
     state: install
     install_deps: true
-    executable: ~/.local/bin/pipx
+    executable: "{{ home_dir }}/.local/bin/pipx"
 - name: Install mkdocs plugins
   community.general.pipx:
     name: mkdocs
@@ -15,4 +15,4 @@
       - mkdocs-glightbox
       - mkdocs-section-index
       - mkdocs-literate-nav
-    executable: ~/.local/bin/pipx
+    executable: "{{ home_dir }}/.local/bin/pipx"

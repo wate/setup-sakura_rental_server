@@ -6,7 +6,7 @@
 - name: Install composer
   ansible.builtin.get_url:
     url: https://getcomposer.org/download/latest-stable/composer.phar
-    dest: ~/bin/composer
+    dest: "{{ home_dir }}/bin/composer"
     mode: "0755"
   when: >
     not composer_result.stat.exists

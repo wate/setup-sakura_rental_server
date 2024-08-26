@@ -1,5 +1,10 @@
 ---
 ## --------------
+## ホームディレクトリ
+## --------------
+home_dir: "/home/{{ lookup('env', 'SAKURA_LOGIN_ACCOUNT') }}"
+
+## --------------
 ## レンタルサーバーのログインパスワード
 ## --------------
 sakura_login_password: "{{ lookup('env', 'SAKURA_LOGIN_PASSWORD') }}"

@@ -4,9 +4,10 @@
   gather_facts: false
   become: false
   pre_tasks:
-    - name: パスワード用変数が定義済みかどうかのチェック
+    - name: 必須の変数が定義済みかどうかのチェック
       ansible.builtin.assert:
         that:
+          - home_dir != '/home/'
           - sakura_login_password is defined
           - sakura_login_password | length > 0
         fail_msg: "レンタルサーバーのログインパスワードが未設定です"
@@ -14,12 +15,12 @@
   tasks:
     - name: binディレクトリを作成
       ansible.builtin.file:
-        path: ~/bin
+        path: "{{ home_dir }}/bin"
         state: directory
         mode: "0755"
     - name: tmpディレクトリを作成
       ansible.builtin.file:
-        path: ~/tmp
+        path: "{{ home_dir }}/tmp"
         state: directory
         mode: "0755"
     - name: PHPのセットアップ
@@ -102,6 +103,6 @@
     #   tags: leantime
     # - name: Node.jsのコンパイル
     #   ansible.builtin.command:
-    #     cmd: nice -n 20 ~/.nodebrew/current/bin/nodebrew compile stable
-    #     creates: ~/.nodebrew/current/bin/node
+    #     cmd: nice -n 20 {{ home_dir }}/.nodebrew/current/bin/nodebrew compile stable
+    #     creates: "{{ home_dir }}/.nodebrew/current/bin/node"
     #   tags: nodejs

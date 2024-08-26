@@ -12,34 +12,50 @@
 - name: Download golang archive
   ansible.builtin.get_url:
     url: https://go.dev/dl/go{{ golang_version }}.freebsd-amd64.tar.gz
-    dest: ~/.ansible/tmp/go{{ golang_version }}.freebsd-amd64.tar.gz
+    dest: "{{ home_dir }}/.ansible/tmp/go{{ golang_version }}.freebsd-amd64.tar.gz"
     mode: "0644"
   register: download_golang_archive_result
 - name: Check golang binary
   ansible.builtin.stat:
-    path: ~/go/bin/go
+    path: "{{ home_dir }}/go/bin/go"
   register: golang_bin_stat_result
 - name: Unarchive golang archive file
   ## BSD版のtarではansible.builtin.unarchiveモジュールが利用できないため
   ## ansible.builtin.commandで対応
   ansible.builtin.command:
-    cmd: tar vxfz ~/.ansible/tmp/go{{ golang_version }}.freebsd-amd64.tar.gz
-    chdir: ~/
+    cmd: tar vxfz {{ home_dir }}/.ansible/tmp/go{{ golang_version }}.freebsd-amd64.tar.gz
+    chdir: "{{ home_dir }}"
   when: >
     not golang_bin_stat_result.stat.exists
     or
     download_golang_archive_result is changed
 - name: Create Go project directory
   ansible.builtin.file:
-    path: ~/goprojects
+    path: "{{ home_dir }}/goprojects"
     state: directory
     mode: "0755"
 - name: Update ~/.bashrc
   ansible.builtin.blockinfile:
-    path: ~/.bashrc
+    path: "{{ home_dir }}/.bashrc"
     marker: "# {mark} golang ANSIBLE MANAGED BLOCK"
     content: |
       export GOROOT=$HOME/go
       export GOPATH=$HOME/goprojects
       export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
     mode: "0644"
+- name: Find cleanup files
+  ansible.builtin.find:
+    paths: "{{ home_dir }}/.ansible/tmp/"
+    file_type: file
+    patterns:
+      - go*.freebsd-amd64.tar.gz
+    excludes:
+      - go{{ golang_version }}.freebsd-amd64.tar.gz
+  register: find_result
+- name: Cleanup files
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ find_result.files }}"
+  loop_control:
+    label: "{{ item.path }}"

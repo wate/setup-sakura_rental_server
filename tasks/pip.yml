@@ -1,7 +1,7 @@
 ---
 - name: Check installed pip
   ansible.builtin.stat:
-    path: ~/.local/bin/pip
+    path: "{{ home_dir }}/.local/bin/pip"
   register: pip_result
 - name: Install pip
   when: >
@@ -12,19 +12,19 @@
     - name: Download pip setup script
       ansible.builtin.get_url:
         url: https://bootstrap.pypa.io/get-pip.py
-        dest: ~/get-pip.py
+        dest: "{{ home_dir }}/get-pip.py"
         mode: "0644"
     - name: Install pip
       ansible.builtin.command:
-        cmd: python ~/get-pip.py
-        creates: ~/.local/bin/pip
+        cmd: python {{ home_dir }}/get-pip.py
+        creates: "{{ home_dir }}/.local/bin/pip"
     - name: Remove pip setup script
       ansible.builtin.file:
-        path: ~/get-pip.py
+        path: "{{ home_dir }}/get-pip.py"
         state: absent
 - name: Update ~/.bashrc
   ansible.builtin.blockinfile:
-    path: ~/.bashrc
+    path: "{{ home_dir }}/.bashrc"
     marker: "# {mark} pip ANSIBLE MANAGED BLOCK"
     content: |
       if [ -d "$HOME/.local/bin" ] ; then
@@ -34,9 +34,9 @@
 - name: Install pipx
   ansible.builtin.pip:
     name: pipx
-    executable: ~/.local/bin/pip
+    executable: "{{ home_dir }}/.local/bin/pip"
 - name: Add shell completions
   ansible.builtin.blockinfile:
-    path: ~/.bashrc
+    path: "{{ home_dir }}/.bashrc"
     marker: "# {mark} pipx ANSIBLE MANAGED BLOCK"
     content: eval "$(register-python-argcomplete pipx)"

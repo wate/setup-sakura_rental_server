@@ -1,7 +1,7 @@
 ---
 - name: Create/update ~/.bash_profile
   ansible.builtin.blockinfile:
-    path: ~/.bash_profile
+    path: "{{ home_dir }}/.bash_profile"
     marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
     content: |
       export LANG=ja_JP.UTF-8
@@ -14,7 +14,7 @@
     create: true
 - name: Create/update ~/.bashrc
   ansible.builtin.blockinfile:
-    path: ~/.bashrc
+    path: "{{ home_dir }}/.bashrc"
     marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
     content: |
       if [ -f ~/.secret ]; then
@@ -34,7 +34,7 @@
     create: true
 - name: Set ls command alias
   ansible.builtin.lineinfile:
-    path: ~/.bashrc
+    path: "{{ home_dir }}/.bashrc"
     regexp: ^alias {{ item.alias }}=
     line: alias {{ item.alias }}="{{ item.value }}"
   loop:
