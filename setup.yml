@@ -92,6 +92,10 @@
       ansible.builtin.import_tasks:
         file: tasks/lazygit.yml
       tags: lazygit
+    # - name: mkdocsのインストール
+    #   ansible.builtin.import_tasks:
+    #     file: tasks/mkdocs.yml
+    #   tags: mkdocs
     # - name: leantimeのインストール
     #   ansible.builtin.import_tasks:
     #     file: tasks/leantime.yml

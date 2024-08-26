@@ -1,17 +1,18 @@
 ---
-- name: Install material for mkdocs
+- name: Install mkdocs
   community.general.pipx:
-    name: mkdocs-material
+    name: mkdocs
     state: install
     install_deps: true
     executable: ~/.local/bin/pipx
 - name: Install mkdocs plugins
   community.general.pipx:
-    name: mkdocs-material
+    name: mkdocs
     state: inject
     inject_packages:
+      - mkdocs-material
       - mkdocs-git-revision-date-localized-plugin
       - mkdocs-glightbox
-      - mkdocs-tooltips
-      - mkdocs-exclude
+      - mkdocs-section-index
+      - mkdocs-literate-nav
     executable: ~/.local/bin/pipx
