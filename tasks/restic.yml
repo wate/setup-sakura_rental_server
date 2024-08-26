@@ -18,7 +18,7 @@
     - name: Download restic archive file
       ansible.builtin.get_url:
         url: https://github.com/restic/restic/releases/download/{{ restic_version }}/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
-        dest: ~/.ansible/tmp/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
+        dest: ~/bin/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
         mode: "0644"
     - name: Unarchive restic current release archive
       ansible.builtin.command:
