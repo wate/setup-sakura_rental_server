@@ -17,3 +17,4 @@
     remote_src: true
     extra_opts:
       - "-j"
+      - "-o"
