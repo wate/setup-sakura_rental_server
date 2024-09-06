@@ -32,14 +32,14 @@ mysql_db_user: "{{ lookup('env', 'MYSQL_DB_USER') }}"
 mysql_db_password: "{{ lookup('env', 'MYSQL_DB_PASSWORD') }}"
 
 ## --------------
-## バックアップ設定
+## バックアップ設定(WIP)
 ## --------------
-backup_settings:
-  sample:
-    cron:
-      hour: 10
-      minute: 10
-    command:
+# backup_settings:
+#   sample:
+#     cron:
+#       hour: 10
+#       minute: 10
+#     command:
 
 ## --------------
 ## インストールするLeantimeのバージョン
