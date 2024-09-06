@@ -41,41 +41,10 @@ backup_settings:
       minute: 10
     command:
 
-
-
-
-
-
 ## --------------
 ## インストールするLeantimeのバージョン
 ## --------------
 leantime_version: latest
-
-## --------------
-## Webサイトの設定
-## --------------
-websites:
-  - name: 自作CMSのデモサイト
-    url: tool-s.net
-    # mail: true
-  - name: プロジェクト管理ツール(Leantime)
-    url: tool-s.work
-    alias: leantime
-    # mail: false
-  - name: ダミー1
-    url: tool-s.org
-    # mail: true
-  - name: ダミー2
-    url: tool-s.info
-    # mail: true
-  - name: ダミー3
-    url: tool-s.dev
-    # mail: true
-
-## --------------
-## 初期ドメインのリダイレクト先URL
-## --------------
-default_domain_redirect_url: http://tool-s.net/
 
 ## --------------
 ## Leantimeの設定
