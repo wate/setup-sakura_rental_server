@@ -1,50 +1,35 @@
 ---
-- name: Get rclone latest version
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/restic/restic/releases/latest
-    headers:
-      Accept: application/vnd.github+json
-  register: latest_releases
-- name: Set version variable
-  ansible.builtin.set_fact:
-    restic_version: "{{ latest_releases.json.tag_name }}"
-- name: Check restic binary
+- name: Check installed restic
   ansible.builtin.stat:
-    path: "{{ home_dir }}/bin/restic_{{ restic_version[1:] }}_freebsd_amd64"
-  register: restic_stat_result
-- name: Install restic
-  when: not restic_stat_result.stat.exists
+    path: "{{ home_dir }}/bin/restic"
+  register: restic_result
+- name: Install rclone
+  when: not restic_result.stat.exists
   block:
+    - name: Get restic latest version
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/restic/restic/releases/latest
+        headers:
+          Accept: application/vnd.github+json
+      register: latest_release
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        restic_version: "{{ latest_release.json.tag_name }}"
     - name: Download restic archive file
       ansible.builtin.get_url:
         url: https://github.com/restic/restic/releases/download/{{ restic_version }}/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
-        dest: "{{ home_dir }}/bin/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2"
+        dest: "{{ home_dir }}/bin/restic.bz2"
         mode: "0644"
     - name: Unarchive restic current release archive
       ansible.builtin.command:
-        cmd: bzip2 -d {{ home_dir }}/bin/restic_{{ restic_version[1:] }}_freebsd_amd64.bz2
-        creates: restic_{{ restic_version[1:] }}_freebsd_amd64
+        cmd: bunzip2 {{ home_dir }}/bin/restic.bz2
         chdir: "{{ home_dir }}/bin"
-    - name: Create restic symlink
+    - name: Set parmission
       ansible.builtin.file:
         path: "{{ home_dir }}/bin/restic"
-        src: "{{ home_dir }}/bin/restic_{{ restic_version[1:] }}_freebsd_amd64"
-        state: link
         mode: "0755"
-- name: Find cleanup files
-  ansible.builtin.find:
-    paths: "{{ home_dir }}/bin"
-    file_type: file
-    patterns:
-      - restic_*_freebsd_amd64
-      - restic_*_freebsd_amd64.bz2
-    excludes:
-      - restic_{{ restic_version[1:] }}_freebsd_amd64
-  register: find_result
-- name: Cleanup files
-  ansible.builtin.file:
-    path: "{{ item.path }}"
-    state: absent
-  loop: "{{ find_result.files }}"
-  loop_control:
-    label: "{{ item.path }}"
+- name: Update restic
+  ansible.builtin.command:
+    cmd: "{{ home_dir }}/bin/restic self-update"
+    chdir: "{{ home_dir }}"
+  changed_when: false

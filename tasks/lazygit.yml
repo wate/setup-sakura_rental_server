@@ -23,7 +23,6 @@
   ansible.builtin.find:
     paths:
       - "{{ home_dir }}/tmp"
-    file_type: directory
     patterns:
       - lazygit_*_freebsd_x86_64.tar.gz
     excludes:

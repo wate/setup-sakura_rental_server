@@ -1,20 +1,32 @@
 ---
-- name: Get rclone latest version
-  ansible.builtin.uri:
-    url: https://api.github.com/repos/rclone/rclone/releases/latest
-    headers:
-      Accept: application/vnd.github+json
-  register: latest_releases
-- name: Set version variable
-  ansible.builtin.set_fact:
-    rclone_version: "{{ latest_releases.json.tag_name }}"
-- name: Unarchive rclone current release archive
-  ansible.builtin.unarchive:
-    src: https://github.com/rclone/rclone/releases/download/{{ rclone_version }}/rclone-{{ rclone_version }}-freebsd-amd64.zip
-    dest: "{{ home_dir }}/bin"
-    include:
-      - rclone-{{ rclone_version }}-freebsd-amd64/rclone
-    remote_src: true
-    extra_opts:
-      - "-j"
-      - "-o"
+- name: Check installed rclone
+  ansible.builtin.stat:
+    path: "{{ home_dir }}/bin/rclone"
+  register: rclone_result
+- name: Install rclone
+  when: not rclone_result.stat.exists
+  block:
+    - name: Get rclone latest version
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/rclone/rclone/releases/latest
+        headers:
+          Accept: application/vnd.github+json
+      register: latest_release
+    - name: Set version variable
+      ansible.builtin.set_fact:
+        rclone_version: "{{ latest_release.json.tag_name }}"
+    - name: Unarchive rclone current release archive
+      ansible.builtin.unarchive:
+        src: https://github.com/rclone/rclone/releases/download/{{ rclone_version }}/rclone-{{ rclone_version }}-freebsd-amd64.zip
+        dest: "{{ home_dir }}/bin"
+        include:
+          - rclone-{{ rclone_version }}-freebsd-amd64/rclone
+        remote_src: true
+        extra_opts:
+          - "-j"
+          - "-o"
+- name: Update rclone
+  ansible.builtin.command:
+    cmd: "{{ home_dir }}/bin/rclone selfupdate"
+    chdir: "{{ home_dir }}"
+  changed_when: false

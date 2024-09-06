@@ -24,7 +24,7 @@
     create: true
 - name: Create/update ~/.secret
   ansible.builtin.blockinfile:
-    path: ~/.secret
+    path: "{{ home_dir }}/.secret"
     marker: "# {mark} bash ANSIBLE MANAGED BLOCK"
     content: |
       {% for secret_env_name, secret_env_value in (secret_env | default({})).items() -%}

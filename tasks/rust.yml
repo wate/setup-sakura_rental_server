@@ -1,27 +1,25 @@
 ---
-- name: Check golang binary
+- name: Check rustc binary
   ansible.builtin.stat:
     path: "{{ home_dir }}/.cargo/bin/rustc"
   register: rustc_bin_stat_result
-- name: Download rust install command
-  ansible.builtin.get_url:
-    url: https://static.rust-lang.org/rustup/dist/x86_64-unknown-freebsd/rustup-init
-    dest: "{{ home_dir }}/.ansible/tmp/rustup-init"
-    mode: "0700"
-  register: download_rustup_init_result
-- name: Execute rust install command
-  ansible.builtin.command:
-    cmd: "{{ home_dir }}/.ansible/tmp/rustup-init -y -q --no-modify-path"
-    chdir: "{{ home_dir }}/"
-  when: >
-    not rustc_bin_stat_result.stat.exists
-    or
-    download_rustup_init_result is changed
+- name: Install rust
+  when: not rustc_bin_stat_result.stat.exists
+  block:
+    - name: Download rust install command
+      ansible.builtin.get_url:
+        url: https://static.rust-lang.org/rustup/dist/x86_64-unknown-freebsd/rustup-init
+        dest: "{{ home_dir }}/tmp/rustup-init"
+        mode: "0700"
+    - name: Execute rust install command
+      ansible.builtin.command:
+        cmd: "{{ home_dir }}/tmp/rustup-init -y -q --no-modify-path"
+        chdir: "{{ home_dir }}"
 - name: Update ~/.bashrc
   ansible.builtin.blockinfile:
     path: "{{ home_dir }}/.bashrc"
     marker: "# {mark} rust ANSIBLE MANAGED BLOCK"
     content: |
-      export PATH=$HOME/.cargo/bin:$PATH
+      export PATH=$PATH:$HOME/.cargo/bin
       export CARGO_TARGET_DIR={{ home_dir }}/tmp
     mode: "0644"

@@ -9,10 +9,15 @@
   when: not cargo_result.stat.exists
 - name: Install eza
   ansible.builtin.command:
-    cmd: nice -n 20 ~/.cargo/bin/cargo install eza
+    cmd: nice -n 20 {{ home_dir }}/.cargo/bin/cargo install eza
     chdir: "{{ home_dir }}"
   environment:
     CARGO_TARGET_DIR: "{{ home_dir }}/tmp"
+- name: Create simlink
+  ansible.builtin.file:
+    path: "{{ home_dir }}/bin/eza"
+    src: "{{ home_dir }}/.cargo/bin/eza"
+    state: link
 - name: Set ls command alias
   ansible.builtin.lineinfile:
     path: "{{ home_dir }}/.bashrc"
