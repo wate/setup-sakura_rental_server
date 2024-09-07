@@ -1,13 +1,13 @@
 ---
-- name: Get rclone latest version
+- name: Get lazygit latest version
   ansible.builtin.uri:
     url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
     headers:
       Accept: application/vnd.github+json
-  register: latest_releases
+  register: latest_release
 - name: Set version variable
   ansible.builtin.set_fact:
-    lazygit_version: "{{ latest_releases.json.tag_name }}"
+    lazygit_version: "{{ latest_release.json.tag_name }}"
 - name: Download release archive
   ansible.builtin.get_url:
     url: https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_version }}/lazygit_{{ lazygit_version[1:] }}_freebsd_x86_64.tar.gz

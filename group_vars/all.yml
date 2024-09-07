@@ -2,7 +2,7 @@
 ## --------------
 ## ホームディレクトリ
 ## --------------
-home_dir: "/home/{{ lookup('env', 'SAKURA_LOGIN_ACCOUNT') }}"
+home_dir: "{{ (lookup('env', 'SAKURA_LOGIN_ACCOUNT') | length > 1) | ternary('/home/' +  lookup('env', 'SAKURA_LOGIN_ACCOUNT'), '~') }}"
 
 ## --------------
 ## レンタルサーバーのログインパスワード
@@ -32,14 +32,29 @@ mysql_db_user: "{{ lookup('env', 'MYSQL_DB_USER') }}"
 mysql_db_password: "{{ lookup('env', 'MYSQL_DB_PASSWORD') }}"
 
 ## --------------
+## バックアップのディレクトリ設定
+## --------------
+backup_base_dir: "{{ home_dir }}/backup"
+backup_script_dir: "{{ backup_base_dir }}/script"
+backup_data_dir: "{{ backup_base_dir }}/data"
+backup_repo_dir: "{{ backup_base_dir }}/repo"
+backup_repo_password_dir: "{{ backup_base_dir }}/password"
+
+## --------------
 ## バックアップ設定(WIP)
 ## --------------
 # backup_settings:
-#   sample:
+#   leantime:
 #     cron:
 #       hour: 10
 #       minute: 10
 #     command:
+#     restic:
+#       repo:
+#       repo_password:
+#       forget_keep_type:
+#       forget_keep_value:
+
 
 ## --------------
 ## インストールするLeantimeのバージョン

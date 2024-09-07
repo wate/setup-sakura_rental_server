@@ -7,7 +7,6 @@
     - name: 必須の変数が定義済みかどうかのチェック
       ansible.builtin.assert:
         that:
-          - home_dir != '/home/'
           - sakura_login_password is defined
           - sakura_login_password | length > 0
         fail_msg: "レンタルサーバーのログインパスワードが未設定です"
@@ -68,19 +67,27 @@
     - name: rcloneのインストール
       ansible.builtin.import_tasks:
         file: tasks/rclone.yml
-      tags: rclone
+      tags:
+        - rclone
+        - backup
     - name: Resticのインストール
       ansible.builtin.import_tasks:
         file: tasks/restic.yml
-      tags: restic
+      tags:
+        - restic
+        - backup
     - name: nodebrewのインストール
       ansible.builtin.import_tasks:
         file: tasks/nodebrew.yml
-      tags: nodebrew
+      tags:
+        - nodebrew
+        - nodejs
     - name: goのインストール
       ansible.builtin.import_tasks:
         file: tasks/golang.yml
-      tags: go
+      tags:
+        - go
+        - golang
     - name: rustのインストール
       ansible.builtin.import_tasks:
         file: tasks/rust.yml
@@ -93,6 +100,10 @@
       ansible.builtin.import_tasks:
         file: tasks/lazygit.yml
       tags: lazygit
+    - name: バックアップ設定
+      ansible.builtin.import_tasks:
+        file: tasks/backup.yml
+      tags: backup
     # - name: mkdocsのインストール
     #   ansible.builtin.import_tasks:
     #     file: tasks/mkdocs.yml
