@@ -1,0 +1,18 @@
+---
+- name: Create backup data base directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - "{{ backup_script_dir }}"
+    - "{{ backup_data_dir }}"
+    - "{{ backup_repo_dir }}"
+    - "{{ backup_repo_password_dir }}"
+- name: Setup backup setting
+  ansible.builtin.include_tasks:
+    file: tasks/backup/setting.yml
+  loop: "{{ backup_settings | default({}) | dict2items }}"
+  loop_control:
+    loop_var: setting
+    label: "{{ setting.key }}"

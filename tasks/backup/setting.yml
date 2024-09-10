@@ -1,0 +1,76 @@
+---
+- name: Set setting variable
+  ansible.builtin.set_fact:
+    backup_setting_name: "{{ setting.key }}"
+    backup_setting: "{{ setting.value }}"
+- name: Setup restic setting({{ backup_setting_name }})
+  when: backup_setting.restic is defined
+  block:
+    - name: Set backup restic setting variables
+      ansible.builtin.set_fact:
+        restic_repo_type: "{{ backup_setting.restic.repo_type | default('local') }}"
+        restic_repo: "{{ backup_setting.restic.repo | default(backup_repo_dir + '/' + backup_setting_name) }}"
+    - name: Assert restic repository password:{{ backup_setting_name }}
+      ansible.builtin.assert:
+        that:
+          - backup_setting.restic.repo_password is defined
+          - backup_setting.restic.repo_password | length >= 8
+        quiet: true
+    - name: Create restic repository
+      ansible.builtin.file:
+        path: "{{ restic_repo }}"
+        state: directory
+        mode: "0700"
+      when: restic_repo_type == 'local'
+    - name: Generate/update password file:{{ backup_setting_name }}
+      ansible.builtin.template:
+        src: backup/password.j2
+        dest: "{{ backup_repo_password_dir }}/{{ backup_setting_name }}"
+        mode: "0600"
+        backup: true
+      vars:
+        restic_repo_password: "{{ backup_setting.restic.repo_password }}"
+      register: password_file_result
+    - name: Change restic repository password
+      when:
+        - password_file_result is changed
+        - password_file_result.backup_file is defined
+      environment:
+        RESTIC_REPOSITORY: "{{ (restic_repo_type == 'local') | ternary(restic_repo, restic_repo_type + ':' + restic_repo) }}"
+      block:
+        - name: Check repository initialized
+          ansible.builtin.command:
+            cmd: bin/restic cat config --password-file {{ password_file_result.backup_file }}
+            chdir: "{{ home_dir }}"
+          failed_when: restic_cat_result.rc not in [0, 10]
+          register: restic_cat_result
+        - name: Change repository password
+          when: restic_cat_result.rc == 0
+          block:
+            - name: Change repository password
+              ansible.builtin.command:
+                cmd: >
+                  restic key passwd
+                  --password-file "{{ password_file_result.backup_file }}"
+                  --new-password-file "{{ backup_repo_password_dir }}/{{ backup_setting_name }}"
+            - name: Remove old password file
+              ansible.builtin.file:
+                path: "{{ password_file_result.backup_file }}"
+                state: absent
+- name: Generate/update backup script:{{ backup_setting_name }}
+  ansible.builtin.template:
+    src: backup/backup.sh.j2
+    dest: "{{ backup_script_dir }}/{{ backup_setting_name }}"
+    mode: "0700"
+- name: Set cron job:{{ backup_setting_name }}
+  ansible.builtin.cron:
+    name: "backup:{{ backup_setting_name }}"
+    job: "{{ backup_script_dir }}/{{ backup_setting_name }}"
+    minute: "{{ backup_setting.cron.minute | default(omit) }}"
+    hour: "{{ backup_setting.cron.hour | default(omit) }}"
+    day: "{{ backup_setting.cron.day | default(omit) }}"
+    weekday: "{{ backup_setting.cron.weekday | default(omit) }}"
+    month: "{{ backup_setting.cron.month | default(omit) }}"
+    disabled: "{{ backup_setting.cron.disabled | default(false) }}"
+    state: "{{ backup_setting.cron.removed | default(false) | ternary('absent', 'present') }}"
+  when: backup_setting.cron is defined

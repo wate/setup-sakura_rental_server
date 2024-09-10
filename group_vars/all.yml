@@ -48,13 +48,10 @@ backup_repo_password_dir: "{{ backup_base_dir }}/password"
 #     cron:
 #       hour: 10
 #       minute: 10
-#     command:
+#     command: |
+#       mysqldump -u {{ mysql_db_user }} -p{{ db_password }} -h {{ mysql_db_server }} {{ lookup('env', 'MYSQL_DB_LEARNTIME') }} >${BACKUP_DATA_DIR}/dump.sql
 #     restic:
-#       repo:
-#       repo_password:
-#       forget_keep_type:
-#       forget_keep_value:
-
+#       repo_password: "{{ lookup('env', 'BACKUP_LEARNTIME_PASSWORD') }}"
 
 ## --------------
 ## インストールするLeantimeのバージョン

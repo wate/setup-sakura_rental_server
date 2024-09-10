@@ -1,0 +1,68 @@
+#!/usr/local/bin/bash
+
+set -eo pipefail
+
+export SETTING_NAME="{{ backup_setting_name }}"
+export BACKUP_BASE_DIR="{{ backup_base_dir }}"
+export BACKUP_DATA_DIR="{{ backup_data_dir }}/{{ backup_setting_name }}"
+export BASE_DIR="{{ backup_setting.chdir | default(backup_data_dir + '/' + backup_setting_name) }}"
+{% if backup_setting.environment is defined -%}
+
+### 環境変数の設定
+{% for var_name, var_value in backup_setting.environment.items() -%}
+export {{ var_name }}="{{ var_value }}"
+{% endfor %}
+{% endif %}
+
+cd "${BASE_DIR}"
+
+{% if backup_setting.command is defined -%}
+## バックアップ処理
+## ---------------------------------
+
+{{ backup_setting.command }}
+
+{% endif %}
+{% if backup_setting.restic is defined %}
+cd "${BASE_DIR}"
+
+## バックアップデータの世代管理
+## ---------------------------------
+{% set restic_setting = backup_setting.restic -%}
+{% set restic_backup_target = restic_setting.target | default(backup_data_dir + '/' + backup_setting_name) -%}
+{% set restic_repo_type = restic_setting.repo_type | default(backup_restic_default_repo_type) | lower %}
+{% set restic_repo = restic_setting.repo | default(backup_repo_dir + '/' + backup_setting_name) -%}
+### リポジトリ
+export RESTIC_REPOSITORY="{{ (restic_repo_type == 'local') | ternary(restic_repo, restic_repo_type + ':' + restic_repo) }}"
+### リポジトリのパスワードファイル
+export RESTIC_PASSWORD_FILE="{{ backup_repo_password_dir }}/{{ backup_setting_name }}"
+### リポジトリのチェック及び初期化
+{% set restic_init_options = backup_restic_init_common_options | default([]) %}
+{% if backup_setting.init_options is defined -%}
+{% set restic_init_options = restic_init_options + backup_setting.init_options %}
+{% endif %}
+## @see https://restic.readthedocs.io/en/stable/075_scripting.html#check-if-a-repository-is-already-initialized
+set +e
+restic cat config
+if [ $? -eq 10 ]; then
+  restic init {{ restic_init_options | join(' ') }}
+fi
+set -e
+
+### スナップショットの作成
+{% set restic_backup_options = restic_backup_common_options | default([]) -%}
+{% if restic_setting.backup_options is defined -%}
+{% set restic_backup_options = restic_backup_options + restic_setting.backup_options -%}
+{% endif %}
+{% set restic_backup_target = backup_setting.target | default(backup_data_dir + '/' + backup_setting_name) -%}
+restic backup {{ restic_backup_options | join(' ') }} "{{ restic_backup_target }}"
+
+{% if restic_setting.forget | default(true) %}
+### スナップショットのクリーンアップ
+{% set restic_forget_keep_type = restic_setting.forget_keep_type | default(backup_restic_default_forget_keep_type) -%}
+{% set restic_forget_keep_value = restic_setting.forget_keep_value | default(backup_restic_default_forget_keep_value) | string -%}
+{% set restic_forget_keep_param = '--keep-' + restic_forget_keep_type + ' ' + restic_forget_keep_value -%}
+{% set restic_forget_options = [restic_forget_keep_param] + (restic_setting.forget_other_options | default([])) + (backup_restic_forget_common_options | default([])) %}
+restic forget {{ restic_forget_options | join(' ') }}
+{% endif %}
+{% endif %}
